@@ -24,8 +24,9 @@
 					<tr>
 						<th class="text-center">#</th>
 						<th>Reference Number</th>
-						<th>Sender Name</th>
-						<th>Recipient Name</th>
+						
+						<th>Model</th>
+						<th>Problem</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -35,7 +36,7 @@
 					$i = 1;
 					$where = $_SESSION['login_id'];
 					
-					
+					echo $where;
 					$qry = $conn->query("SELECT * from parcels where from_branch_id=$where order by  unix_timestamp(date_created) desc ");
 					while($row= $qry->fetch_assoc()):
 					?>
@@ -43,8 +44,8 @@
 					<tr>
 						<td class="text-center"><?php echo $i++ ?></td>
 						<td><b><?php echo ($row['reference_number']) ?></b></td>
-						<td><b><?php echo ucwords($row['sender_name']) ?></b></td>
 						<td><b><?php echo ucwords($row['recipient_name']) ?></b></td>
+						<td><b><?php echo ucwords($row['recipient_address']) ?></b></td>
 						<td class="text-center">
 							<?php 
 							switch ($row['status']) {
@@ -89,6 +90,9 @@
 		                    	<button type="button" class="btn btn-info btn-flat view_parcel" data-id="<?php echo $row['id'] ?>">
 		                          <i class="fas fa-eye"></i>
 		                        </button>
+								<a href="print.php?variable_name=<?php echo $row['reference_number'] ?>" class="btn btn-primary btn-flat ">
+		                          <i class="fas fa-print"></i>
+		                        </a>
 		                        <a href="index.php?page=edit_parcel&id=<?php echo $row['id'] ?>" class="btn btn-primary btn-flat ">
 		                          <i class="fas fa-edit"></i>
 		                        </a>
@@ -109,7 +113,9 @@
 </style>
 <script>
 	$(document).ready(function(){
-		$('#list').dataTable()
+		$('#list').dataTable({
+			paging: false
+		})
 		$('.view_parcel').click(function(){
 			uni_modal("Parcel's Details","view_parcel.php?id="+$(this).attr('data-id'),"large")
 		})

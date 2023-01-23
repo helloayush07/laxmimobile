@@ -18,16 +18,16 @@
                 <input type="text" name="sender_name" id="" class="form-control form-control-sm" value="<?php echo isset($sender_name) ? $sender_name : '' ?>" required>
               </div>
               <div class="form-group">
-                <label for="" class="control-label">Number</label>
+                <label for="" class="control-label">Address</label>
                 <input type="text" name="sender_address" id="" class="form-control form-control-sm" value="<?php echo isset($sender_address) ? $sender_address : '' ?>" required>
               </div>
               <div class="form-group">
-                <label for="" class="control-label">Alternate Number</label>
+                <label for="" class="control-label">Contact #</label>
                 <input type="text" name="sender_contact" id="" class="form-control form-control-sm" value="<?php echo isset($sender_contact) ? $sender_contact : '' ?>" required>
               </div>
           </div>
           <div class="col-md-6">
-              <b>Mobile Information</b>
+              <b>MObile Information</b>
               <div class="form-group">
                 <label for="" class="control-label">Model</label>
                 <input type="text" name="recipient_name" id="" class="form-control form-control-sm" value="<?php echo isset($recipient_name) ? $recipient_name : '' ?>" required>
@@ -52,7 +52,7 @@
               <small>, Pickup = Pickup to nearest Branch</small>
             </div>
           </div>
-          <div class="col-md-6" id=""  <?php echo isset($type) && $type == 1 ? 'style="display: none"' : '' ?>>
+          <div class="col-md-6" id=""  <?php echo isset($type) && $type == 1 ? 'style="display: none"' : '' ?> >
             <?php if($_SESSION['login_branch_id'] <= 0): ?>
               <div class="form-group" id="fbi-field">
                 <label for="" class="control-label">Branch Processed</label>
@@ -84,7 +84,8 @@
           </div>
         </div>
         <hr>
-        <b>Accesories Information</b>
+
+        <b>Phone Information</b>
         <table class="table table-bordered" id="parcel-items">
           <thead>
             <tr>
@@ -105,10 +106,7 @@
               <td><input type="text" name='length[]' value="<?php echo isset($length) ? $length :'' ?>" required></td>
               <td><input type="text" name='width[]' value="<?php echo isset($width) ? $width :'' ?>" required></td>
               <td><input type="text" class="text-right number" name='price[]' value="<?php echo isset($price) ? $price :'' ?>" required></td>
-              
-              <?php
-              
-              if(!isset($id)): ?>
+              <?php if(isset($id)): ?>
               <td><button class="btn btn-sm btn-danger" type="button" onclick="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
               <?php endif; ?>
             </tr>
@@ -116,13 +114,12 @@
               <?php if(isset($id)): ?>
           <tfoot>
             <th colspan="4" class="text-right">Total</th>
-
-            <th class="text-right" id="tAmount"><?php echo $length+$width+$price; ?></th>
+            <th class="text-right" id="amu"><?php echo ($price - (float)$width);?></th>
             <th></th>
           </tfoot>
               <?php endif; ?>
         </table>
-              <?php if(isset($id)): ?>
+              <?php if(!isset($id)): ?>
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end">
             <button  class="btn btn-sm btn-primary bg-gradient-primary" type="button" id="new_parcel"><i class="fa fa-item"></i> Add Item</button>
@@ -130,9 +127,15 @@
         </div>
               <?php endif; ?>
       </form>
+      <hr>
+      <form>
+              
+      </form>
   	</div>
   	<div class="card-footer border-top border-info">
   		<div class="d-flex w-100 justify-content-center align-items-center">
+
+      
   			<button class="btn btn-flat  bg-gradient-primary mx-2" form="manage-parcel">Save</button>
   			<a class="btn btn-flat bg-gradient-secondary mx-2" href="./index.php?page=parcel_list">Cancel</a>
   		</div>
@@ -147,7 +150,7 @@
         <td><input type="text" name='length[]' required></td>
         <td><input type="text" name='width[]' required></td>
         <td><input type="text" class="text-right number" name='price[]' required></td>
-        <td><button class="btn btn-sm btn-danger" type="button" onclick="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
+        <td><button class="btn btn-sm btn-danger" type="button" onclick   ="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
       </tr>
   </table>
 </div>

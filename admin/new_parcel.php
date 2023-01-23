@@ -4,30 +4,7 @@
     resize: none;
   }
 
-  <?php 
-
-if (isset($_POST['upload'])) {
  
-  $filename = $_FILES["uploadfile"]["name"];
-  $tempname = $_FILES["uploadfile"]["tmp_name"];
-  $folder = "./imagess/" . $filename;
-
-  $db = mysqli_connect("localhost", "root",'password','cms_db');
-
-  // Get all the submitted data from the form
-  $sql = "INSERT INTO parcel_image (filename) VALUES ('$filename')";
-
-  // Execute query
-  mysqli_query($db, $sql);
-
-  // Now let's move the uploaded image into the folder: image
-  if (move_uploaded_file($tempname, $folder)) {
-      echo "<h3>  Image uploaded successfully!</h3>";
-  } else {
-      echo "<h3>  Failed to upload image!</h3>";
-  }
-}
-?>
 
 
 </style>
@@ -112,7 +89,7 @@ if (isset($_POST['upload'])) {
           </div>
         </div>
         <hr>
-        <b>Parcel Information</b>
+        <b>Phone Information</b>
         <table class="table table-bordered" id="parcel-items">
           <thead>
             <tr>

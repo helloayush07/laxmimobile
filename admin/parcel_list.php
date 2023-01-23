@@ -20,8 +20,9 @@
 					<tr>
 						<th class="text-center">#</th>
 						<th>Reference Number</th>
-						<th>Sender Name</th>
-						<th>Recipient Name</th>
+						<th>Branch</th>
+						<th>Model</th>
+						<th>Problem</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -40,14 +41,30 @@
 							$where .= " and ";
 						$where .= " (from_branch_id = {$_SESSION['login_branch_id']} or to_branch_id = {$_SESSION['login_branch_id']}) ";
 					}
+					
+
+
+
 					$qry = $conn->query("SELECT * from parcels $where order by  unix_timestamp(date_created) desc ");
 					while($row= $qry->fetch_assoc()):
 					?>
+
+					
 					<tr>
 						<td class="text-center"><?php echo $i++ ?></td>
 						<td><b><?php echo ($row['reference_number']) ?></b></td>
-						<td><b><?php echo ucwords($row['sender_name']) ?></b></td>
+<?php $chk=$row['from_branch_id'] ?>
+						<?php $qry1 = $conn->query("SELECT * FROM branches where id =$chk ")->fetch_array();
+						foreach($qry1 as $kk => $vv){
+							$$kk = $vv;
+						}
+						?>
+						<?php 
+						$var_value = 1;
+						$_SESSION['varname'] = $var_value;?>
+						<td><b><?php echo $street; ?></b></td>
 						<td><b><?php echo ucwords($row['recipient_name']) ?></b></td>
+						<td><b><?php echo ucwords($row['recipient_address']) ?></b></td>
 						<td class="text-center">
 							<?php 
 							switch ($row['status']) {
@@ -114,7 +131,10 @@
 </style>
 <script>
 	$(document).ready(function(){
-		$('#list').dataTable()
+		$('#list').dataTable({
+			
+			paging: false
+	})
 		$('.view_parcel').click(function(){
 			uni_modal("Parcel's Details","view_parcel.php?id="+$(this).attr('data-id'),"large")
 		})

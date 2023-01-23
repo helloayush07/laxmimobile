@@ -1,8 +1,13 @@
-<?php include'db_connect.php' ?>
+<?php include 'db_connect.php' ?>
 
+<?php $var_value = '(price-width)' ?>
 <div class="col-lg-12">
 	<div class="card card-outline card-primary">
-		
+		<div class="card-header">
+			<div class="card-tools">
+				<a class="btn btn-block btn-sm btn-default btn-flat border-primary " href="./index.php?page=new_parcel"><i class="fa fa-plus"></i> Add New</a>
+			</div>
+		</div>
 		<div class="card-body">
 			<table class="table tabe-hover table-bordered" id="list">
 				<!-- <colgroup>
@@ -19,6 +24,7 @@
 						<th>Branch</th>
 						<th>Model</th>
 						<th>Problem</th>
+						<th>Due</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -30,18 +36,24 @@
 					if(isset($_GET['s'])){
 						$where = " where status = {$_GET['s']} ";
 					}
-					if($_SESSION['login_type'] == 1 ){
+					if($_SESSION['login_type'] != 1 ){
 						if(empty($where))
 							$where = " where ";
 						else
 							$where .= " and ";
 						$where .= " (from_branch_id = {$_SESSION['login_branch_id']} or to_branch_id = {$_SESSION['login_branch_id']}) ";
 					}
-					$qry = $conn->query("SELECT * from parcels $where order by  unix_timestamp(date_created) desc ");
+					
+
+
+
+					$qry = $conn->query("SELECT * from parcels where (price-width)>0 order by  unix_timestamp(date_created) desc ");
 					while($row= $qry->fetch_assoc()):
 					?>
+
+					
 					<tr>
-					<td class="text-center"><?php echo $i++ ?></td>
+						<td class="text-center"><?php echo $i++ ?></td>
 						<td><b><?php echo ($row['reference_number']) ?></b></td>
 <?php $chk=$row['from_branch_id'] ?>
 						<?php $qry1 = $conn->query("SELECT * FROM branches where id =$chk ")->fetch_array();
@@ -52,6 +64,7 @@
 						<td><b><?php echo $street; ?></b></td>
 						<td><b><?php echo ucwords($row['recipient_name']) ?></b></td>
 						<td><b><?php echo ucwords($row['recipient_address']) ?></b></td>
+						<td><b><?php echo ucwords('₹'.$row['price']-$row['width']) ?></b></td>
 						<td class="text-center">
 							<?php 
 							switch ($row['status']) {
@@ -99,7 +112,10 @@
 		                        <a href="index.php?page=edit_parcel&id=<?php echo $row['id'] ?>" class="btn btn-primary btn-flat ">
 		                          <i class="fas fa-edit"></i>
 		                        </a>
-		                       
+		                        <?php $newvar= $row['price']-$row['width'];?>
+		                        <a href="https://wa.me/91<?php echo $row['sender_contact'];?>/?text=Dear <?php echo *$row['sender_name'];?>* You Have A Due Amount Of *₹<?php echo $newvar;?>*" class="btn btn-primary">
+		                          <i class="fas fa-share"></i>
+		                        </a>
 	                      </div>
 						</td>
 					</tr>	
@@ -117,8 +133,9 @@
 <script>
 	$(document).ready(function(){
 		$('#list').dataTable({
+			
 			paging: false
-		})
+	})
 		$('.view_parcel').click(function(){
 			uni_modal("Parcel's Details","view_parcel.php?id="+$(this).attr('data-id'),"large")
 		})

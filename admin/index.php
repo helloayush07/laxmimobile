@@ -122,7 +122,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>For educational only<a href="https://1sourcecodr.blogspot.com/">1 Source code</a>.</strong>
+    <strong>Developed by<a href="https://brandsnappy.online/">Brand Snappy</a>.</strong>
     thanks
     <div class="float-right d-none d-sm-inline-block">
       <b><?php echo $_SESSION['system']['name'] ?></b>

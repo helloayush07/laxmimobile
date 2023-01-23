@@ -53,24 +53,24 @@ $branch = array();
 			</div>
 			<div class="col-md-6">
 				<div class="callout callout-info">
-					<b class="border-bottom border-primary">Assocries Details</b>
+					<b class="border-bottom border-primary">Assoceries Details</b>
 						<div class="row">
-						<div class="col-sm-6">
+							<div class="col-sm-6">
 								<dl>
 									<dt>Sim</dt>
 									<dd><?php echo $weight ?></dd>
 									<dt>Back Cover:</dt>
 									<dd><?php echo $height ?></dd>
 									<dt>Estimate Price:</dt>
-									<dd><?php echo number_format($price,2) ?></dd>
+									<dd><?php echo '₹'.number_format($price,2) ?></dd>
 								</dl>	
 							</div>
 							<div class="col-sm-6">
 								<dl>
 									<dt>Est Date:</dt>
-									<dd><?php echo $width ?></dd>
-									<dt>Advance:</dt>
 									<dd><?php echo $length ?></dd>
+									<dt>Advance:</dt>
+									<dd><?php echo '₹'.$width ?></dd>
 									<dt>Type:</dt>
 									<dd><?php echo $type == 1 ? "<span class='badge badge-primary'>Deliver to Recipient</span>":"<span class='badge badge-info'>Pickup</span>" ?></dd>
 								</dl>	

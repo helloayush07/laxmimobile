@@ -52,7 +52,7 @@
               <small>, Pickup = Pickup to nearest Branch</small>
             </div>
           </div>
-          <div class="col-md-6" id=""  <?php echo isset($type) && $type == 1 ? 'style="display: none"' : '' ?>>
+          <div class="col-md-6" id=""  <?php echo isset($type) && $type == 1 ? 'style="display: none"' : '' ?> >
             <?php if($_SESSION['login_branch_id'] <= 0): ?>
               <div class="form-group" id="fbi-field">
                 <label for="" class="control-label">Branch Processed</label>
@@ -85,15 +85,18 @@
         </div>
         <hr>
 
-        <b>Parcel Information</b>
+        <b>Phone Information</b>
         <table class="table table-bordered" id="parcel-items">
           <thead>
             <tr>
-            <th>Sim</th>
+              <th>Sim</th>
               <th>BackCover</th>
               <th>Est Date</th>
-             
-             
+              <th>Advance</th>
+              <th>Estimate</th>
+              <?php if(!isset($id)): ?>
+              <th></th>
+            <?php endif; ?>
             </tr>
           </thead>
           <tbody>
@@ -101,43 +104,22 @@
               <td><input type="text" name='weight[]' value="<?php echo isset($weight) ? $weight :'' ?>" required></td>
               <td><input type="text" name='height[]' value="<?php echo isset($height) ? $height :'' ?>" required></td>
               <td><input type="text" name='length[]' value="<?php echo isset($length) ? $length :'' ?>" required></td>
-             
-          </tfoot>
-             
-        </table>
-
-
-        <b>Pricing Information</b>
-        <table class="table table-bordered" id="parcel-items">
-          <thead>
-            <tr>
-            
-              <th>Advance</th>
-              <th>Estimate</th>
-              <?php if(isset($id)): ?>
-              <th></th>
-            <?php endif; ?>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              
               <td><input type="text" name='width[]' value="<?php echo isset($width) ? $width :'' ?>" required></td>
               <td><input type="text" class="text-right number" name='price[]' value="<?php echo isset($price) ? $price :'' ?>" required></td>
-              <?php if(!isset($id)): ?>
+              <?php if(isset($id)): ?>
               <td><button class="btn btn-sm btn-danger" type="button" onclick="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
               <?php endif; ?>
             </tr>
           </tbody>
-              <?php if(!isset($id)): ?>
+              <?php if(isset($id)): ?>
           <tfoot>
-            <th class="text-right">Total</th>
-            <th class="text-right" id="tAmount">0.00</th>
-            
+            <th colspan="4" class="text-right">Total</th>
+            <th class="text-right" id="amu"><?php echo ($price - (float)$width);?></th>
+            <th></th>
           </tfoot>
               <?php endif; ?>
         </table>
-              <?php if(isset($id)): ?>
+              <?php if(!isset($id)): ?>
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end">
             <button  class="btn btn-sm btn-primary bg-gradient-primary" type="button" id="new_parcel"><i class="fa fa-item"></i> Add Item</button>
@@ -145,9 +127,15 @@
         </div>
               <?php endif; ?>
       </form>
+      <hr>
+      <form>
+              
+      </form>
   	</div>
   	<div class="card-footer border-top border-info">
   		<div class="d-flex w-100 justify-content-center align-items-center">
+
+      
   			<button class="btn btn-flat  bg-gradient-primary mx-2" form="manage-parcel">Save</button>
   			<a class="btn btn-flat bg-gradient-secondary mx-2" href="./index.php?page=parcel_list">Cancel</a>
   		</div>
@@ -157,10 +145,12 @@
 <div id="ptr_clone" class="d-none">
   <table>
     <tr>
-        
+        <td><input type="text" name='weight[]' required></td>
+        <td><input type="text" name='height[]' required></td>
+        <td><input type="text" name='length[]' required></td>
         <td><input type="text" name='width[]' required></td>
         <td><input type="text" class="text-right number" name='price[]' required></td>
-        <td><button class="btn btn-sm btn-danger" type="button" onclick="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
+        <td><button class="btn btn-sm btn-danger" type="button" onclick   ="$(this).closest('tr').remove() && calc()"><i class="fa fa-times"></i></button></td>
       </tr>
   </table>
 </div>

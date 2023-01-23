@@ -11,9 +11,11 @@ if(!isset($_SESSION['login_id'])){
 
 include 'db_connect.php';
 require('fpdf185/fpdf.php');
-if(isset($_POST['x'])) {
+
     $new_value=$_GET['variable_name'];
-}
+	//$price=$_GET['price'];
+    //$advance=$_GET['advance'];
+
 $qry = $conn->query("SELECT * FROM parcels where reference_number = $new_value")->fetch_array();
 foreach($qry as $k => $v){
 	$$k = $v;
@@ -28,106 +30,268 @@ $branch = array();
 	endwhile;
 }
 
+$qry1 = $conn->query("SELECT * FROM branches where id = $from_branch_id")->fetch_array();
+foreach($qry1 as $kk => $vv){
+	$$kk = $vv;
+}
+
 //A4 width : 219mm
 //default margin : 10mm each side
 //writable horizontal : 219-(10*2)=189mm
-
-//create pdf object
 $pdf = new FPDF('P','mm','A4');
-//add new page
-$pdf->AddPage();
+    /* A4 - 210 * 297 mm */
+	$pdf -> AddPage();
+//create pdf object
+
+$pdf -> SetFont('Arial','B',10);
+ 
+    //Creating Fill and Border color (RGB color value)
+    $pdf -> SetDrawColor(223, 88, 42); 
+    $pdf -> SetFillColor(223, 88, 42); 
+ 
+    //Draw rectangle box (x,y,w,h,style)
+    $pdf -> Rect(10,10,190,10,'DF');
+ 
+    //Creating Fill and Border color (RGB color value)
+    $pdf -> SetDrawColor(243, 243, 243); 
+    $pdf -> SetFillColor(243, 243, 243); 
+ 
+    //Draw rectangle box (x,y,w,h,style)
+    $pdf -> Rect(10,20,190,50,'DF');
+    //Image(string file ,float x ,float y , float w, float h , string type)
+    $pdf -> Image("logo.png",20,27,20,20,'PNG');
+ 
+    // Cell(width,hei$ght,text,border,line Break, align,colorFill)
+ 
+    
+   
+    $pdf -> Cell(33,15,'',0,1);
+    $pdf -> Cell(33,7,'',0,0);
+    $pdf -> Cell(120,7,'Laxmi Mobile   ',0,1);
+ 
+    
+    $pdf -> Cell(33,7,'',0,0);
+    $pdf -> Cell(120,7,'Phone : 7381910222',0,1);
+    $pdf -> Cell(33,10,'',0,0);
+    $pdf -> Cell(100,10,'www.laxmimobile.in',0,0);
+    
+    $pdf -> Cell(50,10,'INVOICE DETAILS',0,1);
+ 
+	$pdf -> SetFont('Arial','B',10);
+    $pdf -> Cell(133,7,'',0,0);
+    $pdf -> Cell(50,7,date("Y-m-d"),0,1);
+ 
+    $pdf -> Cell(133,7,'',0,0);
+    $pdf -> Cell(50,7,$reference_number,0,1);
+	
+	
+ 
+    $pdf -> Ln(15);// Line Break
+    $pdf -> Cell(185,7,'<Payment terms (due on receipt, due in 15 days)>',0,1,'R');
+ 
+    $pdf -> SetDrawColor(162, 162, 162); 
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(85,10,'BILL TO','B',0);
+    $pdf -> Cell(10,7,'',0,0);
+    $pdf -> Cell(85,10,'BRANCH DETAILS ','B',1);
+ 
+    $pdf -> Ln(3);// Line Break
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(85,7,'Details :',0,0);
+    $pdf -> Cell(10,7,'',0,0);
+    $pdf -> Cell(85,7,'Details :',0,1);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(85,7,$sender_name,0,0);
+    $pdf -> Cell(10,7,'',0,0);
+    $pdf -> Cell(85,7,$street,0,1);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(85,7,$sender_address,0,0);
+    $pdf -> Cell(10,7,'',0,0);
+    $pdf -> Cell(85,7,$city,0,1);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(85,7,$sender_contact,0,0);
+    $pdf -> Cell(10,7,'',0,0);
+    $pdf -> Cell(85,7,$contact,0,1);
+ 
+    $pdf -> Ln(3);// Line Break
+ 
+    $pdf -> SetDrawColor(223, 88, 42); 
+    $pdf -> SetFillColor(223, 88, 42); 
+ 
+    //Draw rectangle box (x,y,w,h,style)
+    $pdf -> Rect(15,130,180,8,'DF');
+ 
+    $pdf -> SetTextColor(255, 255, 255);
+    $pdf -> SetFillColor(223, 88, 42);  
+ 
+    $pdf -> Ln(1.5);// Line Break
+ 
+    $pdf -> SetFont('Arial','B',10);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'DESCRIPTION',0,0,'C',true);
+    $pdf -> Cell(28.3,7,'QTY',0,0);
+    $pdf -> Cell(28.3,7,'ADVANCE',0,0);
+    $pdf -> Cell(28.3,7,'ESTIMATE',0,1);
+ 
+ 
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Ln(1);// Line Break
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,"  ".$recipient_name,'L',0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'','R',1,'R');
+ 
+    $pdf -> SetFillColor(243, 243, 243);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ $pro= "  having ". $recipient_address . " problem ";
 
 
-$pdf->SetFont('Arial','B',14);
-
-//Cell(width , height , text , border , end line , [align] )
-
-$pdf->Cell(130 ,5,'GEMUL APPLIANCES.CO',0,0);
-$pdf->Cell(59 ,5,'INVOICE',0,1);//end of line
-
-//set font to arial, regular, 12pt
-$pdf->SetFont('Arial','',12);
-
-$pdf->Cell(130 ,5,'[Street Address]',0,0);
-$pdf->Cell(59 ,5,'',0,1);//end of line
-
-$pdf->Cell(130 ,5,'[City, Country, ZIP]',0,0);
-$pdf->Cell(25 ,5,'Date',0,0);
-$pdf->Cell(34 ,5,'[dd/mm/yyyy]',0,1);//end of line
-
-$pdf->Cell(130 ,5,'Phone [+12345678]',0,0);
-$pdf->Cell(25 ,5,'Invoice #',0,0);
-$pdf->Cell(34 ,5,$reference_number,0,1);//end of line
-
-$pdf->Cell(130 ,5,'Fax [+12345678]',0,0);
-$pdf->Cell(25 ,5,'Customer ID',0,0);
-$pdf->Cell(34 ,5,'[1234567]',0,1);//end of line
-
-//make a dummy empty cell as a vertical spacer
-$pdf->Cell(189 ,10,'',0,1);//end of line
-
-//billing address
-$pdf->Cell(100 ,5,'Bill to',0,1);//end of line
-
-//add dummy cell at beginning of each line for indentation
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Name]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Company Name]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Address]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Phone]',0,1);
-
-//make a dummy empty cell as a vertical spacer
-$pdf->Cell(189 ,10,'',0,1);//end of line
-
-//invoice contents
-$pdf->SetFont('Arial','B',12);
-
-$pdf->Cell(130 ,5,'Description',1,0);
-$pdf->Cell(25 ,5,'Taxable',1,0);
-$pdf->Cell(34 ,5,'Amount',1,1);//end of line
-
-$pdf->SetFont('Arial','',12);
-
-//Numbers are right-aligned so we give 'R' after new line parameter
-
-$pdf->Cell(130 ,5,'UltraCool Fridge',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'3,250',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'Supaclean Diswasher',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'1,200',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'Something Else',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'1,000',1,1,'R');//end of line
-
-//summary
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Subtotal',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'4,450',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Taxable',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'0',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Tax Rate',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'10%',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Total Due',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,$price,1,1,'R');//end of line
-//output the result
-$pdf->Output();
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,$pro,'L',0,'',true);
+    $pdf -> Cell(28.3,7,'1',0,0,'',true);
+    $pdf -> Cell(28.3,7,$width.".00",0,0,'',true);
+    $pdf -> Cell(28.3,7,$price.".00",'R',1,'R',true);
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'','R',1,'R');
+ 
+    $pdf -> SetFillColor(243, 243, 243);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'','R',1,'R',true);
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'','R',1,'R');
+ 
+    $pdf -> SetFillColor(243, 243, 243);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'','R',1,'R',true);
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetTextColor(98,98,98);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'','R',1,'R');
+ 
+    $pdf -> SetFillColor(243, 243, 243);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'','R',1,'R',true);
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0);
+    $pdf -> Cell(28.3,7,'',0,0,true);
+    $pdf -> Cell(28.3,7,'',0,0);
+    $pdf -> Cell(28.3,7,'','R',1,'R');
+ 
+    $pdf -> SetFillColor(243, 243, 243);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','L',0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'',0,0,'',true);
+    $pdf -> Cell(28.3,7,'','R',1,'R',true);
+ 
+    $pdf -> SetFillColor(225, 225, 225);
+    $pdf -> SetDrawColor(162, 162, 162);
+ 
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'','LB',0);
+    $pdf -> Cell(28.3,7,'','B',0);
+    $pdf -> Cell(28.3,7,'','B',0);
+    $pdf -> Cell(28.3,7,'','RB',1,'R');
+ 
+    $pdf -> SetDrawColor(162, 162, 162);
+    //Creating Center Line
+ 
+    $pdf -> Line(100,138,100,215);
+    $pdf -> Line(128.5,138,128.5,215);
+    $pdf -> Line(165,138,165,215);
+    $pdf -> SetFont('Arial','B',10);
+    $pdf -> Ln(3);// Line Break
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'TERM & CONDITION',0,0,'L');
+    $pdf -> Cell(55,7,'ESTIMATE PRICE',0,0,'R');
+    $pdf -> Cell(29,7,$price.".00",'B',1,'R');
+ 
+    
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'Collect The Device within 30 days',0,0,'L');
+    $pdf -> Cell(55,7,'ADVANCE',0,0,'R');
+    $pdf -> Cell(29,7,$width.".00",'B',1,'R');
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'After 30 Days We are not responsible',0,0,'L');
+    $pdf -> Cell(55,7,'DISCOUNT',0,0,'R');
+    $pdf -> Cell(29,7,'20%','B',1,'R');
+ 
+    
+ 
+    $due=$price-$width;
+ 
+    $pdf -> Cell(5,7,'',0,0);
+    $pdf -> Cell(95,7,'For Your device',0,0,'L');
+    $pdf -> Cell(55,7,'Amount To Pay',0,0,'R');
+    $pdf -> Cell(29,7,$due.".00",'B',1,'R');
+ 
+    $pdf -> SetDrawColor(223, 88, 42); 
+    $pdf -> SetFillColor(223, 88, 42); 
+ 
+    //Draw rectangle box (x,y,w,h,style)
+    $pdf -> Rect(10,280,190,10,'DF');
+ 
+ 
+    $pdf -> Output(); // Display output
 ?>

@@ -73,7 +73,7 @@
             <a href="#" class="nav-link nav-edit_parcel">
               <i class="nav-icon fas fa-boxes"></i>
               <p>
-                Parcels
+                Products
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -107,7 +107,7 @@
             <a href="./index.php?page=track" class="nav-link nav-track">
               <i class="nav-icon fas fa-search"></i>
               <p>
-                Track Parcel
+                Track Product
               </p>
             </a>
           </li>  
@@ -118,7 +118,17 @@
                 Reports
               </p>
             </a>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a href="./index.php?page=partial" class="nav-link nav-reports">
+              <i class="nav-icon fas fa-file"></i>
+              <p>
+                Partial
+              </p>
+            </a>
           </li>  
+
         </ul>
       </nav>
     </div>
